@@ -67,7 +67,6 @@ Bjay follows the MVVM (Model-View-ViewModel) architecture pattern with Coordinat
 - Coordinator Pattern for navigation
 - Protocol-oriented programming
 - Dependency injection
-- Cache-aside pattern for offline support
 
 ## Project Structure
 
@@ -108,7 +107,6 @@ The app uses a custom networking layer built on top of URLSession with the follo
 - Custom date formatting
 - Error handling
 - Request/response logging
-- Response caching
 
 ### Backend Server
 
