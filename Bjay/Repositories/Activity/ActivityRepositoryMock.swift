@@ -11,7 +11,7 @@ import Foundation
 class ActivityRepositoryMock: ActivityRepositoryProtocol {
     private(set) var activitiesCache: [Activity] = []
     
-    func fetchActivities(page: Int, pageSize: Int) async throws -> PaginationResponse<Activity> {
+    func fetchActivities(page: Int, pageSize: Int, filter: ActivityType? = nil) async throws -> PaginationResponse<Activity> {
         let accountId = "71d085eb-ec61-4218-8ad5-5e9cf367f2b4"
         
         let results = [
@@ -78,3 +78,4 @@ class ActivityRepositoryMock: ActivityRepositoryProtocol {
         _ = try await fetchActivities(page: 1, pageSize: 10)
     }
 }
+

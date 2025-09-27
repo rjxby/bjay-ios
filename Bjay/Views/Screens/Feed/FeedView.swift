@@ -9,10 +9,11 @@ import SwiftUI
 
 struct FeedView: View {
     @StateObject private var viewModel: FeedViewModel
-    @EnvironmentObject private var coordinator: NavigationCoordinator
+    @ObservedObject private var coordinator: NavigationCoordinator
     
-    init(viewModel: FeedViewModel) {
+    init(viewModel: FeedViewModel, coordinator: NavigationCoordinator) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.coordinator = coordinator
     }
     
     var body: some View {
@@ -31,8 +32,6 @@ struct FeedView: View {
                     action: { Task { await viewModel.saveFeed() } },
                     isSaving: $viewModel.isSaving
                 )
-                
-                Spacer()
             }
             .padding()
             .navigationTitle("Feed")
@@ -63,11 +62,11 @@ struct FeedViewPreview: View {
     @State private var path: [Route] = []
     
     let repository = ActivityRepositoryMock()
+    let coordinator = NavigationCoordinator()
     
     var body: some View {
         NavigationStack(path: $path) {
-            FeedView(viewModel: FeedViewModel(repository: repository))
-                .environmentObject(NavigationCoordinator(repository: repository))
+            FeedView(viewModel: FeedViewModel(repository: repository), coordinator: coordinator)
         }
     }
 }

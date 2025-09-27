@@ -11,7 +11,7 @@ protocol ActivityRepositoryProtocol {
     var activitiesCache: [Activity] { get }
     
     // Network operations
-    func fetchActivities(page: Int, pageSize: Int) async throws -> PaginationResponse<Activity>
+    func fetchActivities(page: Int, pageSize: Int, filter: ActivityType?) async throws -> PaginationResponse<Activity>
     func deleteActivity(activityToDelete: Activity) async throws
     func addActivity(newActivity: NewActivity) async throws
     

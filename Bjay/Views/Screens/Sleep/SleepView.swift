@@ -9,10 +9,11 @@ import SwiftUI
 
 struct SleepView: View {
     @StateObject private var viewModel: SleepViewModel
-    @EnvironmentObject private var coordinator: NavigationCoordinator
+    @ObservedObject private var coordinator: NavigationCoordinator
     
-    init(viewModel: SleepViewModel) {
+    init(viewModel: SleepViewModel, coordinator: NavigationCoordinator) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.coordinator = coordinator
     }
     
     var body: some View {
@@ -61,11 +62,11 @@ struct SleepViewPreview: View {
     @State private var path: [Route] = []
     
     let repository = ActivityRepositoryMock()
+    let coordinator = NavigationCoordinator()
     
     var body: some View {
         NavigationStack(path: $path) {
-            SleepView(viewModel: SleepViewModel(repository: repository))
-                .environmentObject(NavigationCoordinator(repository: repository))
+            SleepView(viewModel: SleepViewModel(repository: repository), coordinator: coordinator)
         }
     }
 }

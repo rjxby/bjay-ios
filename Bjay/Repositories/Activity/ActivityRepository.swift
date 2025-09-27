@@ -3,6 +3,7 @@
 //  Bjay
 //
 //  Created by Vlad Kochin on 12/26/24.
+//  Updated 2025-09-27.
 //
 
 import Foundation
@@ -11,15 +12,17 @@ import Foundation
 class ActivityRepository: ActivityRepositoryProtocol {
     private(set) var activitiesCache: [Activity] = []
     private let activityService: ActivityServiceProtocol
-    
+
     init(activityService: ActivityServiceProtocol = ActivityService()) {
         self.activityService = activityService
     }
-    
+
     // MARK: - Fetch Activities
-    func fetchActivities(page: Int, pageSize: Int) async throws -> PaginationResponse<Activity> {
-        let response = try await activityService.fetchActivities(page: page, pageSize: pageSize)
-        
+    // Added optional `filter` param to support server-side filtering
+    func fetchActivities(page: Int, pageSize: Int, filter: ActivityType? = nil) async throws -> PaginationResponse<Activity> {
+        // Forward the filter to the service. Assume service supports it; otherwise service implementation should ignore nil.
+        let response = try await activityService.fetchActivities(page: page, pageSize: pageSize, filter: filter)
+
         if page == 1 {
             // Reset cache when fetching first page
             activitiesCache = response.results
@@ -30,10 +33,15 @@ class ActivityRepository: ActivityRepositoryProtocol {
             }
             activitiesCache.append(contentsOf: newActivities)
         }
-        
+
         return response
     }
-    
+
+    // Keep the older signature for callers that may still use it (for backward compatibility)
+    func fetchActivities(page: Int, pageSize: Int) async throws -> PaginationResponse<Activity> {
+        try await fetchActivities(page: page, pageSize: pageSize, filter: nil)
+    }
+
     // MARK: - Add Activity
     func addActivity(newActivity: NewActivity) async throws {
         let request = CreateActivityRequest(
@@ -44,11 +52,11 @@ class ActivityRepository: ActivityRepositoryProtocol {
             amount: newActivity.amount,
             meta: newActivity.meta
         )
-        
+
         let createdActivity = try await activityService.addActivity(request: request)
         activitiesCache.insert(createdActivity, at: 0) // Add to the beginning since it's newest
     }
-    
+
     // MARK: - Delete Activity
     func deleteActivity(activityToDelete: Activity) async throws {
         if try await activityService.deleteActivity(id: activityToDelete.id) {
@@ -57,12 +65,12 @@ class ActivityRepository: ActivityRepositoryProtocol {
             throw RepositoryError.deletionFailed
         }
     }
-    
+
     // MARK: - Cache Management
     func clearCache() {
         activitiesCache.removeAll()
     }
-    
+
     func refreshCache() async throws {
         _ = try await fetchActivities(page: 1, pageSize: activitiesCache.count + 1)
     }
@@ -72,7 +80,7 @@ class ActivityRepository: ActivityRepositoryProtocol {
 enum RepositoryError: LocalizedError {
     case deletionFailed
     case invalidCache
-    
+
     var errorDescription: String? {
         switch self {
         case .deletionFailed:

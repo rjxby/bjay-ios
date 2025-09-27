@@ -83,3 +83,5 @@ fastlane/test_output
 iOSInjectionProject/
 
 *.xcconfig
+
+.DS_Store

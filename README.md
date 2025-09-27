@@ -16,15 +16,15 @@ A modern, intuitive iOS app for tracking your baby's daily activities including 
 
 ## Screenshots
 
-| ![Dashboard](screenshots/1.png) | ![Activity](screenshots/2.png) | ![Feed](screenshots/3.png) | ![Sleep](screenshots/4.png) | ![Diaper](screenshots/5.png) |
+| ![Dashboard](screenshots/0.0.2-1.png) | ![Activity](screenshots/0.0.2-2.png) | ![Feed](screenshots/0.0.2-3.png) | ![Sleep](screenshots/0.0.2-4.png) | ![Diaper](screenshots/0.0.2-5.png) |
 |----------------------------------|--------------------------------|-----------------------------|-----------------------------|------------------------------|
 | Dashboard                        | Activity Selection            | Feed Tracking               | Sleep Tracking              | Diaper Change               |
 
 ## Requirements
 
-- iOS 15.0+
-- Xcode 14.0+
-- Swift 5.5+
+- iOS 26.0+
+- Xcode 26.0+
+- Swift 6+
 
 ## Installation
 

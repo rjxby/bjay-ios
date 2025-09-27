@@ -6,7 +6,7 @@
 //
 
 protocol ActivityServiceProtocol {
-    func fetchActivities(page: Int, pageSize: Int) async throws -> PaginationResponse<Activity>
+    func fetchActivities(page: Int, pageSize: Int, filter: ActivityType?) async throws -> PaginationResponse<Activity>
     func addActivity(request: CreateActivityRequest) async throws -> Activity
     func deleteActivity(id: String) async throws -> Bool
 }

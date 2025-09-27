@@ -9,24 +9,24 @@ import SwiftUI
 
 struct ActivityTypeIconView: View {
     let activityType: ActivityType
-    
     @State private var isTapped = false
-
+    
     var body: some View {
         ZStack {
             Circle()
                 .fill(activityType.iconBackgroundColor)
                 .frame(width: isTapped ? 55 : 50, height: isTapped ? 55 : 50)
                 .animation(.spring(response: 0.4, dampingFraction: 0.6), value: isTapped)
-                .onTapGesture {
-                    isTapped.toggle()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        isTapped = false
-                    }
-                }
+            
             Image(systemName: activityType.iconName)
                 .font(.title2)
                 .foregroundColor(.white)
+        }
+        .onTapGesture {
+            isTapped.toggle()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                isTapped = false
+            }
         }
     }
 }
@@ -45,6 +45,14 @@ extension ActivityType {
         case .feed: return .green
         case .sleep: return .blue
         case .diaper: return .orange
+        }
+    }
+    
+    var route: Route {
+        switch self {
+        case .feed: return .feed
+        case .sleep: return .sleep
+        case .diaper: return .diaper
         }
     }
 }

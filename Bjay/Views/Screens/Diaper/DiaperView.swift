@@ -9,10 +9,11 @@ import SwiftUI
 
 struct DiaperView: View {
     @StateObject private var viewModel: DiaperViewModel
-    @EnvironmentObject private var coordinator: NavigationCoordinator
+    @ObservedObject private var coordinator: NavigationCoordinator
     
-    init(viewModel: DiaperViewModel) {
+    init(viewModel: DiaperViewModel, coordinator: NavigationCoordinator) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.coordinator = coordinator
     }
     
     var body: some View {
@@ -64,11 +65,11 @@ struct DiaperViewPreview: View {
     @State private var path: [Route] = []
     
     let repository = ActivityRepositoryMock()
+    let coordinator = NavigationCoordinator()
     
     var body: some View {
         NavigationStack(path: $path) {
-            DiaperView(viewModel: DiaperViewModel(repository: repository))
-                .environmentObject(NavigationCoordinator(repository: repository))
+            DiaperView(viewModel: DiaperViewModel(repository: repository), coordinator: coordinator)
         }
     }
 }

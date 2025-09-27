@@ -8,72 +8,60 @@
 import SwiftUI
 
 struct ActivityTypeSelectionView: View {
-    @EnvironmentObject private var coordinator: NavigationCoordinator
+    @ObservedObject private var coordinator: NavigationCoordinator
+    
+    init(coordinator: NavigationCoordinator) {
+        self.coordinator = coordinator
+    }
     
     var body: some View {
         ZStack {
             GradientBackgroundView(colors: [Color.blue.opacity(0.2), Color.pink.opacity(0.3)])
             
-            VStack(spacing: 16) {
-                NavigationLink(value: Route.feed) {
-                    activityRow(type: .feed, color: .green)
+            ScrollView {
+                VStack(spacing: 16) {
+                    activityLink(type: .feed, color: .green)
+                    activityLink(type: .sleep, color: .blue)
+                    activityLink(type: .diaper, color: .orange)
                 }
-                
-                NavigationLink(value: Route.sleep) {
-                    activityRow(type: .sleep, color: .blue)
-                }
-                
-                NavigationLink(value: Route.diaper) {
-                    activityRow(type: .diaper, color: .orange)
-                }
+                .padding(.horizontal)
+                .frame(maxWidth: 500)
             }
-            .padding(.horizontal)
         }
         .navigationTitle("Select Activity")
         .navigationBarTitleDisplayMode(.inline)
     }
     
+    // MARK: - Activity Link (row + navigation)
     @ViewBuilder
-    private func activityRow(type: ActivityType, color: Color) -> some View {
-        HStack {
-            ActivityTypeIconView(activityType: type)
-                .frame(width: 50, height: 50)
-            
-            Spacer()
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(type.stringValue.capitalized)
-                    .font(.headline)
-                    .foregroundColor(color)
+    private func activityLink(type: ActivityType, color: Color) -> some View {
+        NavigationLink(value: type.route) {
+            HStack(spacing: 30) {
+                ActivityTypeIconView(activityType: type)
+                    .frame(width: 50, height: 50)
                 
-                Text("Tap to log \(type.stringValue.lowercased()) activity")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(type.stringValue.capitalized)
+                        .font(.headline)
+                        .foregroundColor(color)
+                    
+                    Text("Tap to log \(type.stringValue.lowercased()) activity")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
             }
-            
-            Spacer()
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.clear)
+            )
+            .shadow(color: color.opacity(0.3), radius: 8, x: 0, y: 4)
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color.clear)
-        )
-        .shadow(color: color.opacity(0.3), radius: 8, x: 0, y: 4)
-        .scaleEffect(1.0)
-        .animation(.spring(), value: type)
     }
 }
-//
-//#Preview {
-//    ActivityTypeSelectionViewPreview()
-//}
-//
-//struct ActivityTypeSelectionViewPreview: View {
-//    @State private var path: [Route] = []
-//    
-//    var body: some View {
-//        ActivityTypeSelectionView(
-//            path: $path
-//        )
-//    }
-//}
+
+#Preview {
+    ActivityTypeSelectionView(coordinator: NavigationCoordinator())
+}
